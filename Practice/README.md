@@ -33,3 +33,5 @@ Pipeline은 다음 단계로 구성됩니다.
 5. Post Actions
 
 빌드 성공 시 테스트 결과와 `test-output.txt`가 Jenkins artifacts에 저장됩니다.
+
+**테스팅**
