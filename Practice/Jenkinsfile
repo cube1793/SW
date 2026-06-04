@@ -6,7 +6,10 @@ pipeline {
         JUNIT_JAR_PATH = 'lib/junit.jar'
         CLASS_DIR = 'classes'
         REPORT_DIR = 'test-reports'
+
+        // Email settings
         MAIL_TO = 'cube1793@g.hongik.ac.kr'
+        MAIL_FROM = 'cube1793@g.hongik.ac.kr'
     }
 
     stages {
@@ -71,6 +74,8 @@ pipeline {
                 try {
                     emailext(
                         to: "${env.MAIL_TO}",
+                        from: "${env.MAIL_FROM}",
+                        replyTo: "${env.MAIL_FROM}",
                         subject: "[Jenkins] FAILURE: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
                         body: """
 Jenkins 빌드 또는 테스트가 실패했습니다.
@@ -82,6 +87,7 @@ Build URL: ${env.BUILD_URL}
 
 Console Output을 확인하여 실패 원인을 분석하세요.
 """,
+                        mimeType: 'text/plain',
                         attachLog: true
                     )
 
@@ -99,6 +105,8 @@ Console Output을 확인하여 실패 원인을 분석하세요.
                 try {
                     emailext(
                         to: "${env.MAIL_TO}",
+                        from: "${env.MAIL_FROM}",
+                        replyTo: "${env.MAIL_FROM}",
                         subject: "[Jenkins] SUCCESS: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
                         body: """
 Jenkins 빌드와 테스트가 성공했습니다.
@@ -110,6 +118,7 @@ Build URL: ${env.BUILD_URL}
 
 JUnit 테스트 결과와 test-output.txt 파일이 Jenkins Artifact로 저장되었습니다.
 """,
+                        mimeType: 'text/plain',
                         attachmentsPattern: "${env.REPORT_DIR}/test-output.txt"
                     )
 
