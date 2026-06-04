@@ -6,6 +6,7 @@ pipeline {
         JUNIT_JAR_PATH = 'lib/junit.jar'
         CLASS_DIR = 'classes'
         REPORT_DIR = 'test-reports'
+        MAIL_TO = 'cube1793@g.hongik.ac.kr'
     }
 
     stages {
@@ -65,10 +66,58 @@ pipeline {
 
         failure {
             echo "Build or test failed!"
+
+            script {
+                try {
+                    emailext(
+                        to: "${env.MAIL_TO}",
+                        subject: "[Jenkins] FAILURE: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                        body: """
+Jenkins 빌드 또는 테스트가 실패했습니다.
+
+Job Name: ${env.JOB_NAME}
+Build Number: ${env.BUILD_NUMBER}
+Build Result: ${currentBuild.currentResult}
+Build URL: ${env.BUILD_URL}
+
+Console Output을 확인하여 실패 원인을 분석하세요.
+""",
+                        attachLog: true
+                    )
+
+                    echo "Failure notification email sent to ${env.MAIL_TO}"
+                } catch (err) {
+                    echo "Email sending failed: ${err}"
+                }
+            }
         }
 
         success {
             echo "Build and test succeeded!"
+
+            script {
+                try {
+                    emailext(
+                        to: "${env.MAIL_TO}",
+                        subject: "[Jenkins] SUCCESS: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                        body: """
+Jenkins 빌드와 테스트가 성공했습니다.
+
+Job Name: ${env.JOB_NAME}
+Build Number: ${env.BUILD_NUMBER}
+Build Result: ${currentBuild.currentResult}
+Build URL: ${env.BUILD_URL}
+
+JUnit 테스트 결과와 test-output.txt 파일이 Jenkins Artifact로 저장되었습니다.
+""",
+                        attachmentsPattern: "${env.REPORT_DIR}/test-output.txt"
+                    )
+
+                    echo "Success notification email sent to ${env.MAIL_TO}"
+                } catch (err) {
+                    echo "Email sending failed: ${err}"
+                }
+            }
         }
     }
 }
