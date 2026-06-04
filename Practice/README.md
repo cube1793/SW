@@ -34,4 +34,4 @@ Java DevOps 실습 프로젝트입니다.
 빌드 성공 시 JUnit 테스트 결과와 `test-output.txt`가 Jenkins Artifact로 저장됩니다.  
 또한 Jenkins 이메일 설정이 완료된 경우 빌드 성공 또는 실패 결과가 이메일로 전송됩니다.
 
-테스팅
+**테스팅**
