@@ -9,7 +9,7 @@ pipeline {
 
         // Email settings
         MAIL_TO = 'cube1793@g.hongik.ac.kr'
-        MAIL_FROM = 'cube1793@g.hongik.ac.kr'
+        MAIL_FROM = 'jenkins-demo@local.test'
     }
 
     stages {
@@ -60,7 +60,7 @@ pipeline {
         }
     }
 
-    post {
+    post {	
         always {
             echo "[*] Archiving test results..."
             junit "${REPORT_DIR}/**/*.xml"
